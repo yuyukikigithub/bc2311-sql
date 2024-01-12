@@ -194,6 +194,62 @@ inner join department d
 on e.dept_id = d.id
 inner join country c 
 on e.country_id = c.id;
+ -- vs 
+select e.id, e.staff_id, e.staff_name, e.hkid, e.dept_id, d.dept_name , c.country_code, c.description
+from employee e , department d ,country c 
+where e.dept_id = d.id
+and e.country_id = c.id;
+-- vs 
+select a.code from (select c.country_code code, count(*) count
+from employee e 
+inner join department d 
+on e.dept_id = d.id
+inner join country c 
+on e.country_id = c.id
+group by c.country_code) a
+where count>1;
+
+select e.id, e.staff_id, e.staff_name, e.hkid, e.dept_id, d.dept_name , c.country_code, c.description
+from employee e 
+inner join department d 
+on e.dept_id = d.id
+inner join country c 
+on e.country_id = c.id;
 
 select * from employee;
 update employee set country_id = 1;
+
+select * 
+from department d right join employee e on e.dept_id = d.id;
+
+update employee set country_id = 2 where id=3;
+
+-- group by, aggregated function
+select e.dept_id 
+from employee e
+group by e.dept_id having count(*)>1;
+update employee set dept_id =1 where id=4;
+alter table employee add column yaer_of_exp int;
+alter table employee rename column yaer_of_exp to year_of_exp ;
+
+select e.dept_id , min(year_of_exp)
+from employee e group by e.dept_id;
+
+select max(year_of_exp) from employee;
+
+-- sub query
+select * from employee where year_of_exp=(select max(year_of_exp) from employee);
+
+-- CTE
+with max_year_of_exp as (
+	select max(year_of_exp) as max_exp from employee
+)
+select * from employee e, max_year_of_exp x where e.year_of_exp = x.max_exp;
+
+
+select e.dept_id, count(1) as no_of_emp
+from employee e, department d 
+where e.dept_id = d.id
+and d.dept_code in ('IT', 'MK') -- filter record before group by
+group by e.dept_id
+having count(1) >1 -- filter group after group by
