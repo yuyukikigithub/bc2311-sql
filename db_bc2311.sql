@@ -252,4 +252,9 @@ from employee e, department d
 where e.dept_id = d.id
 and d.dept_code in ('IT', 'MK') -- filter record before group by
 group by e.dept_id
-having count(1) >1 -- filter group after group by
+having count(1) >1 ; -- filter group after group by
+
+-- distinct 2 fields - all fields checking if the value is duplicated
+select distinct country_id, staff_name from employee;
+
+update customer set score = 50.0 where id = 3
