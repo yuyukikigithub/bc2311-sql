@@ -257,4 +257,18 @@ having count(1) >1 ; -- filter group after group by
 -- distinct 2 fields - all fields checking if the value is duplicated
 select distinct country_id, staff_name from employee;
 
-update customer set score = 50.0 where id = 3
+update customer set score = 50.0 where id = 3;
+
+-- remove dup record accrod to name only
+select e.staff_name from employee e
+union
+select c.cust_name from customer c;
+-- remove dup record accrod to id and name only
+select e.id, e.staff_name from employee e
+union
+select c.id, c.cust_name from customer c;
+
+-- uinion all: show all record from all result set
+select e.id, e.staff_name from employee e
+union all
+select c.id, c.cust_name from customer c;
