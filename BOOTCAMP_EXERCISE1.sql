@@ -132,11 +132,13 @@ insert into job_history (EMPLOYEE_ID,START_DATE,END_DATE,JOB_ID,DEPARTMENT_ID) v
 insert into job_history (EMPLOYEE_ID,START_DATE,END_DATE,JOB_ID,DEPARTMENT_ID) values (101,'1993-10-28','1997-03-15','MK_REP', 30);
 insert into job_history (EMPLOYEE_ID,START_DATE,END_DATE,JOB_ID,DEPARTMENT_ID) values (100,'1996-02-17','1999-12-19','ST_CLERK', 30);
 insert into job_history (EMPLOYEE_ID,START_DATE,END_DATE,JOB_ID,DEPARTMENT_ID) values (103,'1998-03-24','1999-12-31','MK_REP', 20);
-
-select * from locations;
-
+-- Q3
+select l.location_id, l.street_address,l.city,l.state_province ,c.country_name
+from locations l
+join countries c on c.country_id = l.country_id;
+-- Q4
 select FIRST_NAME,LAST_NAME,DEPARTMENT_ID from employees;
-
+-- Q5
 select e.FIRST_NAME,e.LAST_NAME,e.DEPARTMENT_ID from employees e
 join departments d on 
 e.DEPARTMENT_ID = d.DEPARTMENT_ID
@@ -144,24 +146,29 @@ join locations l on
 d.LOCATION_ID = l.LOCATION_ID
 join countries c on
 c.COUNTRY_ID = l.COUNTRY_ID
-where c.COUNTRY_ID = 'JP';
-
-select EMPLOYEE_ID, FIRST_NAME, LAST_NAME, MANAGER_ID from employees;
-
+where c.COUNTRY_NAME = 'Japan';
+-- Q6
+-- select EMPLOYEE_ID, FIRST_NAME, LAST_NAME, MANAGER_ID from employees;
+select e.EMPLOYEE_ID,e.LAST_NAME,e.manager_id, m.last_name from employees e left join employees m on e.manager_id = m.employee_id;
+-- Q7
 select FIRST_NAME, LAST_NAME,hire_date from employees where hire_date >(select hire_date from employees where FIRST_NAME='Lex' and LAST_NAME='De Haan');
-
-select d.department_id, count(1) from departments d join employees e on d.DEPARTMENT_ID = e.DEPARTMENT_ID group by d.department_id;
-
+-- Q8
+select d.department_id, count(1) from departments d left join employees e on d.DEPARTMENT_ID = e.DEPARTMENT_ID group by d.department_id;
+-- Q9
 select e.employee_id, j.job_title,DATEDIFF(jh.end_date,jh.start_date) from  employees e join job_history jh on e.employee_id = jh.employee_id 
-join jobs j on e.JOB_ID = j.JOB_ID;
-
+join jobs j on e.JOB_ID = j.JOB_ID
+where e.department_id=30;
+-- Q10
 select d.department_name, concat(e.first_name,' ',  e.last_name),l.city,c.country_name  from departments d 
-right join locations l on d.location_id = l.location_id
-right join employees e on d.manager_id = e.employee_id
-right join countries c on l.country_id = c.country_id;
-
+left join locations l on d.location_id = l.location_id
+left join employees e on d.manager_id = e.employee_id
+left join countries c on l.country_id = c.country_id;
+-- Q11
 select d.department_id, avg(e.salary) from departments d join employees e
 on d.department_id = e.department_id group by d.department_id;
-
-select * from departments d right join locations l on d.location_id = l.location_id
-right join employees e on d.manager_id = e.employee_id
+-- Q12
+alter table jobs
+drop column MIN_SALARY,
+drop column MAX_SALARY,
+add column GRADE_LEVEL varchar(4),
+ADD CONSTRAINT FOREIGN KEY (GRADE_LEVEL) REFERENCES job_grades(GRADE_LEVEL);
