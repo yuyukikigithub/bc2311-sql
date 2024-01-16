@@ -156,9 +156,12 @@ select e.employee_id, j.job_title,DATEDIFF(jh.end_date,jh.start_date) from  empl
 join jobs j on e.JOB_ID = j.JOB_ID;
 
 select d.department_name, concat(e.first_name,' ',  e.last_name),l.city,c.country_name  from departments d 
-left join locations l on d.location_id = l.location_id
-left join employees e on d.manager_id = e.employee_id
-left join countries c on l.country_id = c.country_id;
+right join locations l on d.location_id = l.location_id
+right join employees e on d.manager_id = e.employee_id
+right join countries c on l.country_id = c.country_id;
 
 select d.department_id, avg(e.salary) from departments d join employees e
 on d.department_id = e.department_id group by d.department_id;
+
+select * from departments d right join locations l on d.location_id = l.location_id
+right join employees e on d.manager_id = e.employee_id
