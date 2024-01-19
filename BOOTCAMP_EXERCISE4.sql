@@ -36,35 +36,14 @@ values
 (42, 45, 65, 8, 4);
 
 
-select p.group_id, max(m.score) as score from
-(select first_player as player, (first_score) as score from
-matches 
-union
-select second_player as player,(second_score) as score from
-matches ) m
-right join players p on m.player=p.player_id
-group by p.group_id
-order by p.group_id;
-
-
-(select first_player as player, (first_score) as score from
-matches 
-union
-select second_player as player,(second_score) as score from
-matches );
-
 select 
--- j.row_num,
 j.gpId,
 j.pyId
--- ,
--- j.sum 
 from 
 (select row_number() over (
  PARTITION BY p.group_id
  ORDER BY n.sum desc
  ) row_num,
--- select 
 p.group_id as gpId,p.player_id as pyId,(n.sum) as sum from players p left join
 (select (m.player) as player, sum(m.score) as sum from 
 	(select first_player as player, (first_score) as score from
